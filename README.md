@@ -14,4 +14,5 @@
   4. Watching youtubers like [Smii7y](https://www.youtube.com/smii7y)
 
 A meme that captures how I currently feel about my university studies is ![](https://github.com/user-attachments/assets/200039de-2b11-4024-9fc3-eace89a7a961)
-*I didnt know whaat else to make italic* ![](https://giphy.com/explore/the-simpsons)
+
+*I didnt know whaat else to make italic* ![200w](https://github.com/user-attachments/assets/9e9f75c1-83e5-491d-a987-6554b1fbfbfb)
