@@ -1,0 +1,103 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+/* Page styling */
+body {
+  background-color: #0077be; /* ocean blue */
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: white;
+  margin: 20px;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+  font-weight: bold;
+}
+
+/* Paragraph spacing */
+p {
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: white;
+}
+```
+
+## Bus capacity based on time and bus type
+
+The purpose of obtaining the data is to figure out if there's any relation between bus capacity with the buys type and time when taking the bus. The data has collected 3 variables, the time the bus is taken, bus type and bus capacity.
+```{r}
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vScRuxMFikb-PdQRCj7kHCN5iodMXkbgrBXC03tMy1EtAS0pnNVpc16lkxbAdRUu100Ru16WlrBBANZ/pub?output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp = "Timestamp",
+    bus_type = "Single or Double Decker?",
+    boarding_time = "Current time when boarding the bus (24 hour)",
+    bus_capacity = "Approx capacity of bus when boarding from 1-10, 1 is empty 10 is full"
+  ) %>%
+  mutate(
+    time_period = ifelse(as.numeric(substr(boarding_time, 1, 2)) < 12, "AM", "PM")
+)
+```
+
+```{r}
+avg_capacity <- mean(latest_data$bus_capacity, na.rm = TRUE)
+
+time_counts <- latest_data %>%
+  group_by(time_period) %>%
+  summarise(count = n())
+```
+  
+```{r}
+avg_capacity <- mean(latest_data$bus_capacity, na.rm = TRUE)
+
+latest_data <- latest_data %>%
+  mutate(time_period = ifelse(as.numeric(substr(boarding_time, 1, 2)) < 12, "AM", "PM"))
+time_counts <- latest_data %>%
+  group_by(time_period) %>%
+  summarise(count = n())
+```
+The average bus capacity is **`r round(avg_capacity, 1)`**.
+
+**`r time_counts$count[time_counts$time_period=="AM"]`** trips were taken at AM time
+and **`r time_counts$count[time_counts$time_period=="PM"]`** trips were taken at PM time.
+
+```{r}
+ggplot(latest_data, aes(x = factor(bus_capacity), fill = time_period)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Bus Fullness by Time of Day",
+    x = "Bus Fullness Rating (1 = Empty, 10 = Full)",
+    y = "Number of Responses",
+    fill = "Time Period"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+latest_data %>%
+  group_by(bus_type) %>%
+  summarise(avg_capacity = mean(bus_capacity, na.rm = TRUE)) %>%
+  ggplot(aes(x = bus_type, y = avg_capacity, fill = bus_type)) +
+  geom_col() +
+  labs(
+    title = "Average Bus Capacity by Bus Type",
+    x = "Bus Type",
+    y = "Average Capacity Rating"
+  ) +
+  theme_minimal()
+```
