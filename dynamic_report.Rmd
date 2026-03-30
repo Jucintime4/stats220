@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
 
 ```
 
-```{css}
+```{css, echo=FALSE}
 /* Page styling */
 body {
   background-color: #0077be; /* ocean blue */
@@ -45,8 +45,8 @@ logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vScRuxM
 latest_data <- logged_data %>%
   rename(
     timestamp = "Timestamp",
-    bus_type = "Single or Double Decker?",
-    boarding_time = "Current time when boarding the bus (24 hour)",
+    bus_type = "Was the bus a single or double decker?",
+    boarding_time = "What time did you board the bus? (24 hour time)",
     bus_capacity = "Approx capacity of bus when boarding from 1-10, 1 is empty 10 is full"
   ) %>%
   mutate(
